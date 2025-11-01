@@ -10,7 +10,7 @@ Automatizar tareas básicas del SO mediante scripts `.sl` legibles y cortos.
 
 - **Operaciones de archivos y directorios**
 
-  - `copy`, `move`, `delete`, `mkdir`
+  - `copy`, `move`, `delete`, `makedir`
 
 - **Ejecución de comandos del sistema**
 
@@ -47,7 +47,7 @@ Automatizar tareas básicas del SO mediante scripts `.sl` legibles y cortos.
 
 ### Palabras Clave
 
-`Set`, `Copy`, `Move`, `Delete`, `Mkdir`, `Run`, `Log`, `If`, `Else`, `Exists`, `To`
+`Set`, `Copy`, `Move`, `Delete`, `Makedir`, `Run`, `Log`, `If`, `Else`, `Exists`, `To` , `End`
 
 ---
 
@@ -64,11 +64,11 @@ Automatizar tareas básicas del SO mediante scripts `.sl` legibles y cortos.
 ### Algunos patrones de comando
 
 ```sl
-set <ident> = <string>
+set <var> = <string>
 copy <string> to <string>
 move <string> to <string>
 delete <string>
-mkdir <string>
+makedir <string>
 run <string>
 log <string>
 if exists <string> { <statements> } [else { <statements> }]
@@ -82,17 +82,17 @@ if exists <string> { <statements> } [else { <statements> }]
 <program>        ::= <stmt_list>
 <stmt_list>      ::= <stmt> | <stmt_list> <stmt>
 <stmt>           ::= <assign> | <command> | <if_stmt>
-<assign>         ::= "set" IDENT "=" STRING
-<command>        ::= <copy> | <move> | <delete> | <mkdir> | <run> | <log>
+<assign>         ::= "set" VAR "=" STRING
+<command>        ::= <copy> | <move> | <delete> | <makedir> | <run> | <log>
 <copy>           ::= "copy" STRING "to" STRING
 <move>           ::= "move" STRING "to" STRING
 <delete>         ::= "delete" STRING
-<mkdir>          ::= "mkdir" STRING
+<makekdir>          ::= "makedir" STRING
 <run>            ::= "run" STRING
 <log>            ::= "log" STRING
 <if_stmt>        ::= "if" "exists" STRING "{" <stmt_list> "}" <else_opt>
 <else_opt>       ::= ε | "else" "{" <stmt_list> "}"
-IDENT            ::= [A-Za-z_][A-Za-z0-9_]*
+VAR              ::= [A-Za-z_][A-Za-z0-9_]*
 STRING           ::= '"' { (carácter no comillas) | ('\"') | <varref> } '"'
-<varref>         ::= "$" IDENT
+<varref>         ::= "$" VAR
 ```
