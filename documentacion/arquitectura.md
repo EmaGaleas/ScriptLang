@@ -21,20 +21,20 @@ Logger → registro de resultados
 ## Descripción de las características
 
 
- **main.py**
+ `main.py`
 Punto de entrada. Coordina el proceso completo de análisis y ejecución.
 
- **Lexer**
+ `Lexer`
 Convierte el código fuente en una secuencia de tokens según la gramática BNF.
 
- **Parser**
+ `Parser`
 Construye el Árbol de Sintaxis Abstracta (AST) siguiendo las reglas de la BNF.
 
- **Semantic Analyzer**
+ `Semantic Analyzer`
    Valida nombres de variables, tipos y contexto (por ejemplo, existencia de archivos o asignaciones previas).
 
- **Interpreter**
+ `Interpreter`
 Ejecuta las instrucciones del AST directamente, interactuando con el sistema operativo.
 
- **Logger**
+ `Logger`
 Registra las acciones realizadas y los errores ocurridos durante la ejecución.
