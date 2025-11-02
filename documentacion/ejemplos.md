@@ -47,14 +47,16 @@ Para ejecutar las pruebas unitarias del Lexer, abre una terminal en la carpeta r
 ```bash
 python -m unittest discover -s pruebas
 ```
-`Salida esperada` Si el Lexer se comporta correctamente, deberías ver:
-..
+**Salida esperada**
+si el Lexer se comporta correctamente, debería ser:
+```
 ----------------------------------------------------------------------
 Ran 2 tests in 0.002s
-OK
 
+OK
+```
 ---
-## 🐛🐛 🐛 🐛 🐛 🐛 🐛🐛 Depuración para ver tokens generados🐛 🐛 🐛 🐛 🐛 🐛 🐛🐛  
+## --🐛🐛🐛🐛🐛🐛🐛🐛 Depuración para ver tokens generados🐛🐛🐛🐛🐛🐛🐛🐛-- 
 
 Existe también un script opcional de depuración llamado: `debug_lexer.py`
 Este archivo se encuentra directamente en la carpeta raíz del proyecto (`ScriptLang/`) y permite imprimir en consola todos los tokens generados por el Lexer para un archivo específico, se ejecuta mediante el siguiente comando:
