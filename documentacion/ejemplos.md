@@ -8,7 +8,7 @@ Este documento contiene ejemplos básicos y pruebas relacionadas con el intérpr
 
 El archivo de prueba para el Lexer se encuentra ubicado en `pruebas/test_lexer.py `
 
-Este archivo contiene pruebas unitarias escritas con `unittest`, cuyo objetivo es validar que el analizador léxico (Lexer) sea capaz de:
+Este archivo contiene pruebas unitarias escritas con `unittest`, **cuyo objetivo es validar que el analizador léxico (Lexer) sea capaz de**:
 
 - Detectar palabras clave del lenguaje (`set`, `copy`, `if`, `log`, etc.).
 - Reconocer variables (`VAR`).
@@ -40,7 +40,7 @@ Su contenido demuestra conceptos clave como:
 
 ---
 
-## Cómo ejecutar las pruebas del Lexer
+## ➡️➡️➡️➡️➡️➡️➡️➡️➡️Cómo ejecutar las pruebas del Lexer⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️
 
 Para ejecutar las pruebas unitarias del Lexer, abre una terminal en la carpeta raíz del proyecto (`ScriptLang/`) y ejecuta el siguiente comando:
 
