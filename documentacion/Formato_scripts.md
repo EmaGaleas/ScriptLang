@@ -1,5 +1,5 @@
 # Formato básico de los scripts
-
+Este documento contiene el formato básico de los scripts .sl
 
 
 Reglas del formato
@@ -11,6 +11,7 @@ Reglas del formato
 * Los comentarios inician con #
 * Las variables se declaran con set y pueden usarse con "$variable".
 * Los bloques van dentro de {} 
+
 
 
 
