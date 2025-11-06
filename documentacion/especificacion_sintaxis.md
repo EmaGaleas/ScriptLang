@@ -87,7 +87,7 @@ if exists <string> { <statements> } [else { <statements> }]
 <copy>           ::= "copy" STRING "to" STRING
 <move>           ::= "move" STRING "to" STRING
 <delete>         ::= "delete" STRING
-<makekdir>          ::= "makedir" STRING
+<makekdir>       ::= "makedir" STRING
 <run>            ::= "run" STRING
 <log>            ::= "log" STRING
 <if_stmt>        ::= "if" "exists" STRING "{" <stmt_list> "}" <else_opt>

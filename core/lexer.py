@@ -1,113 +1,97 @@
 from utilidades.tokens import KEYWORDS, SYMBOLS, TOKEN_TYPES
 
 class Token:
+    __slots__ = ("type", "value", "line", "column")
+
     def __init__(self, type_, value, line, column):
-        self.type = type_
-        self.value = value
-        self.line = line
-        self.column = column
+        self.type, self.value, self.line, self.column = type_, value, line, column
 
     def __repr__(self):
         return f"Token({self.type}, {self.value}, line={self.line}, col={self.column})"
 
 class Lexer:
-    def __init__(self, source_code):
-        self.source = source_code
-        self.length = len(source_code)
-        self.position = 0
-        self.line = 1
-        self.column = 1
+    def __init__(self, src: str):
+        self.src, self.pos, self.line, self.col = src, 0, 1, 1
+        self.len = len(src)
 
+    # === PUBLIC ===
     def tokenize(self):
         tokens = []
+        add = tokens.append  # microoptimizacion
 
-        while not self._is_at_end():
-            current_char = self._peek()
+        while not self._eof():
+            c = self._peek()
 
-            if current_char.isspace():
-                self._consume_whitespace()
-            elif current_char == '#':
-                self._consume_comment()
-            elif current_char == '"':
-                tokens.append(self._consume_string())
-            elif current_char.isalpha() or current_char == '_':
-                tokens.append(self._consume_identifier_or_keyword())
-            elif current_char in SYMBOLS:
-                tokens.append(self._consume_symbol())
+            if c.isspace():
+                self._consume(str.isspace)
+            elif c == '#':
+                self._consume(lambda ch: ch != '\n')
+                self._advance()  # salto de línea
+            elif c == '"':
+                add(self._string())
+            elif c.isalpha() or c == '_':
+                add(self._identifier())
+            elif c in SYMBOLS:
+                add(self._symbol())
             else:
-                raise Exception(f"Unexpected character '{current_char}' at line {self.line}, column {self.column}")
+                raise SyntaxError(f"Carácter inesperado '{c}' en línea {self.line}, columna {self.col}")
 
-        tokens.append(Token(TOKEN_TYPES["END"], None, self.line, self.column))
+        add(Token(TOKEN_TYPES["END"], None, self.line, self.col))
         return tokens
 
-    def _consume_whitespace(self):
-        while not self._is_at_end() and self._peek().isspace():
-            self._advance()
+    # === TOKENS ===
+    def _string(self):
+        start_line, start_col = self.line, self.col
+        self._advance()  # abre comillas
+        val = []
 
-    def _consume_comment(self):
-        while not self._is_at_end() and self._peek() != '\n':
-            self._advance()
-        self._advance()  # Consume newline
-
-    def _consume_string(self):
-        start_line, start_col = self.line, self.column
-        self._advance()  # Skip opening quote
-        value = ""
-
-        while not self._is_at_end() and self._peek() != '"':
-            if self._peek() == '\\' and self._peek(1) == '"':
-                value += '"'
+        while not self._eof():
+            c = self._peek()
+            if c == '"':
+                break
+            if c == '\\' and self._peek(1) == '"':
+                val.append('"')
                 self._advance(2)
-            elif self._peek() == '$':  # Variable reference inside string
+            elif c == '$':
                 self._advance()
-                var_name = self._consume_while(lambda c: c.isalnum() or c == '_')
-                value += f"${{{var_name}}}"  # Template interpolation
+                var = self._consume(lambda ch: ch.isalnum() or ch == '_')
+                val.append(f"${{{var}}}")
             else:
-                value += self._advance()
+                val.append(self._advance())
 
-        if self._is_at_end():
-            raise Exception(f"Unterminated string at line {start_line}, column {start_col}")
+        if self._eof():
+            raise SyntaxError(f"Cadena sin cerrar en línea {start_line}, columna {start_col}")
 
-        self._advance()  # Skip closing quote
-        return Token(TOKEN_TYPES["STRING"], value, start_line, start_col)
+        self._advance()  # cierra comillas
+        return Token(TOKEN_TYPES["STRING"], ''.join(val), start_line, start_col)
 
-    def _consume_identifier_or_keyword(self):
-        start_line, start_col = self.line, self.column
-        value = self._consume_while(lambda c: c.isalnum() or c == '_')
+    def _identifier(self):
+        start_line, start_col = self.line, self.col
+        value = self._consume(lambda c: c.isalnum() or c == '_')
+        return Token(KEYWORDS.get(value, TOKEN_TYPES["VAR"]), value, start_line, start_col)
 
-        if value in KEYWORDS:
-            return Token(KEYWORDS[value], value, start_line, start_col)
-        else:
-            return Token(TOKEN_TYPES["VAR"], value, start_line, start_col)
+    def _symbol(self):
+        start_line, start_col = self.line, self.col
+        c = self._advance()
+        return Token(SYMBOLS[c], c, start_line, start_col)
 
-    def _consume_symbol(self):
-        start_line, start_col = self.line, self.column
-        char = self._advance()
-        return Token(SYMBOLS[char], char, start_line, start_col)
+    # === UTILIDADES ===
+    def _consume(self, cond):
+        start = self.pos
+        while not self._eof() and cond(self._peek()):
+            self._advance()
+        return self.src[start:self.pos]
 
-    def _consume_while(self, condition):
-        result = ""
-        while not self._is_at_end() and condition(self._peek()):
-            result += self._advance()
-        return result
-
-    def _advance(self, step=1):
-        char = self.source[self.position:self.position + step]
-        for _ in range(step):
-            if self._peek() == '\n':
-                self.line += 1
-                self.column = 1
-            else:
-                self.column += 1
-
-            self.position += 1
-
-        return char
+    def _advance(self, n=1):
+        chunk = self.src[self.pos:self.pos + n]
+        for ch in chunk:
+            self.line += ch == '\n'
+            self.col = 1 if ch == '\n' else self.col + 1
+        self.pos += n
+        return chunk
 
     def _peek(self, offset=0):
-        if self.position + offset < self.length:
-            return self.source[self.position + offset]
-        return '\0'
+        return self.src[self.pos + offset] if self.pos + offset < self.len else '\0'
 
-    def _is_at_end(self):
-        return self.position >= self.length
+    def _eof(self):
+        return self.pos >= self.len
