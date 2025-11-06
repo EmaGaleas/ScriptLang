@@ -1,12 +1,12 @@
 # Ejemplo de ScriptLang
 
 set name = "Ema"
-copy "data.txt" to "backup/data.txt"
+copy "ejemplo1.txt" to "Lenguajes/ejemplos/ejemplo1"
 
-if exists "backup/data.txt" {
-    log "Archivo copiado exitosamente!"
+if exists "Lenguajes/ejemplos/ejemplo1" {
+    log "Archivo copiado exitosamente :l"
 } else {
-    log "Error: no se pudo copiar el archivo."
+    log "Error: no se pudo copiar el archivo :/"
 }
 
 run "cleanup.sh"

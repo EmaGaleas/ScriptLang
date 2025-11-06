@@ -50,6 +50,19 @@ python -m unittest discover -s pruebas
 **Salida esperada**
 si el Lexer se comporta correctamente, debería ser:
 ```
+-------TOKENS DE UNITTEST -------
+Token(SET, set, line=3, col=9)
+Token(VAR, name, line=3, col=13)
+Token(EQUAL, =, line=3, col=18)
+Token(STRING, HOLAAAA, line=3, col=20)
+Token(COPY, copy, line=4, col=9)
+Token(STRING, prueba.txt, line=4, col=14)
+Token(TO, to, line=4, col=27)
+Token(STRING, descargas/prueba.txt, line=4, col=30)
+Token(END, None, line=5, col=9)
+-------FIN DE TOKENS -------
+
+..
 ----------------------------------------------------------------------
 Ran 2 tests in 0.002s
 
