@@ -8,7 +8,7 @@ Este documento contiene ejemplos básicos y pruebas relacionadas con el intérpr
 
 El archivo de prueba para el Lexer se encuentra ubicado en `pruebas/test_lexer.py `
 
-Este archivo contiene pruebas unitarias escritas con `unittest`, cuyo objetivo es validar que el analizador léxico (Lexer) sea capaz de:
+Este archivo contiene pruebas unitarias escritas con `unittest`, **cuyo objetivo es validar que el analizador léxico (Lexer) sea capaz de**:
 
 - Detectar palabras clave del lenguaje (`set`, `copy`, `if`, `log`, etc.).
 - Reconocer variables (`VAR`).
@@ -40,21 +40,23 @@ Su contenido demuestra conceptos clave como:
 
 ---
 
-## Cómo ejecutar las pruebas del Lexer
+## ➡️➡️➡️➡️➡️➡️➡️➡️➡️Cómo ejecutar las pruebas del Lexer⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️⬅️
 
 Para ejecutar las pruebas unitarias del Lexer, abre una terminal en la carpeta raíz del proyecto (`ScriptLang/`) y ejecuta el siguiente comando:
 
 ```bash
 python -m unittest discover -s pruebas
 ```
-`Salida esperada` Si el Lexer se comporta correctamente, deberías ver:
-..
+**Salida esperada**
+si el Lexer se comporta correctamente, debería ser:
+```
 ----------------------------------------------------------------------
 Ran 2 tests in 0.002s
-OK
 
+OK
+```
 ---
-## 🐛🐛 🐛 🐛 🐛 🐛 🐛🐛 Depuración para ver tokens generados🐛 🐛 🐛 🐛 🐛 🐛 🐛🐛  
+## --🐛🐛🐛🐛🐛🐛🐛🐛 Depuración para ver tokens generados🐛🐛🐛🐛🐛🐛🐛🐛-- 
 
 Existe también un script opcional de depuración llamado: `debug_lexer.py`
 Este archivo se encuentra directamente en la carpeta raíz del proyecto (`ScriptLang/`) y permite imprimir en consola todos los tokens generados por el Lexer para un archivo específico, se ejecuta mediante el siguiente comando:
