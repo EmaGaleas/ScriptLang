@@ -1,5 +1,6 @@
 import unittest
 from core.lexer import Lexer, Token
+from utilidades import tokens
 from utilidades.tokens import TOKEN_TYPES, KEYWORDS, SYMBOLS
 
 class TestLexer(unittest.TestCase):
@@ -7,12 +8,16 @@ class TestLexer(unittest.TestCase):
     def test_basic_script(self):
         script = '''
         # Script de prueba
-        set name = "Ema"
-        copy "file.txt" to "backup/file.txt"
+        set name = "HOLAAAA"
+        copy "prueba.txt" to "descargas/prueba.txt"
         '''
-
         lexer = Lexer(script)
         tokens = lexer.tokenize()
+        print("\n-------TOKENS DE UNITTEST -------")
+        for t in tokens:
+            print(t)  
+        print("-------FIN DE TOKENS -------\n")
+
 
         # Comprobamos que los tokens fundamentales existan en orden
         expected_types = [
@@ -24,8 +29,8 @@ class TestLexer(unittest.TestCase):
 
     def test_if_else_block(self):
         script = '''
-        if exists "backup/file.txt" {
-            log "Archivo copiado!"
+        if exists "descargas/prueba.txt" {
+            log "Archivo copiado :)"
         } else {
             log "No se pudo copiar :("
         }
@@ -34,7 +39,7 @@ class TestLexer(unittest.TestCase):
         lexer = Lexer(script)
         tokens = lexer.tokenize()
 
-        # Solo validar que termine correctamente con END y no falle
+        # validar END y no falle
         self.assertEqual(tokens[-1].type, TOKEN_TYPES["END"])
         self.assertTrue(any(token.type == KEYWORDS["if"] for token in tokens))
 
