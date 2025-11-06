@@ -4,23 +4,24 @@ A continuación se documentan los patrones sintácticos esenciales que ScriptLan
 
 
 
-1. ##### Ejecutar Comandos Nativos (run)
+## 1. Ejecutar Comandos Nativos (run)
 
 
 
 El comando **run** permite a ScriptLang interactuar directamente con la shell del sistema operativo para ejecutar comandos que no son nativos del lenguaje.
 
 
-
+```
 **Sintaxis**: run "comando <argumentos>"
 
 **Ejemplo**: run "ls -l"
 
 **Uso de variables:** set dir = "documentos"; run "ls -l $dir"
+```
 
 
 
-##### 2\. Crear Archivos y Directorios
+## 2\. Crear Archivos y Directorios
 
 
 
@@ -231,6 +232,7 @@ if exists "$archivo\_origen" {
 &nbsp;   log "ERROR: El archivo $archivo\_origen no existe"
 
 }
+
 
 
 
