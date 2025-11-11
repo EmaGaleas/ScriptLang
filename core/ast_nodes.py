@@ -73,5 +73,25 @@ class MakeDirCommandNode(CommandNode):
         
     def __repr__(self):
         return f'MakeDirCommandNode(path={self.path})'
-
     
+class RunCommandNode(CommandNode):
+    def __init__(self, program):
+        self.program = program 
+
+class LogCommandNode(CommandNode):
+    def __init__(self, message):
+        self.message = message     
+
+# C. Estructura de Control
+class ExistsConditionNode(ASTNode):
+    def __init__(self, path):
+        self.path = path
+
+class IfStatementNode(StatementNode):
+    def __init__(self, condition, if_body, else_body=None):
+        self.condition = condition    # ExistsConditionNode
+        self.if_body = if_body        # list[StatementNode]
+        self.else_body = else_body    # list[StatementNode] o None
+
+    def __repr__(self):
+        return f'IfStatementNode(condition={self.condition}, if_body={self.if_body}, else_body={self.else_body})'
