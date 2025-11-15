@@ -1,2 +1,4 @@
 pruebas/__pycache__/test_lexer.cpython-313.pyc
 utilidades/__pycache__/tokens.cpython-313.pyc
+core/__pycache__/lexer.cpython-313.pyc
+core/__pycache__/parser.cpython-313.pyc

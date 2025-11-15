@@ -1,5 +1,5 @@
 from utilidades.tokens import KEYWORDS, SYMBOLS, TOKEN_TYPES
-
+from utilidades.errores import ErrorHelper
 class Token:
     __slots__ = ("type", "value", "line", "column")
 
@@ -60,7 +60,7 @@ class Lexer:
                 val.append(self._advance())
 
         if self._eof():
-            raise SyntaxError(f"Cadena sin cerrar en línea {start_line}, columna {start_col}")
+            ErrorHelper.illegal_char(c, self.line, self.col)
 
         self._advance()  # cierra comillas
         return Token(TOKEN_TYPES["STRING"], ''.join(val), start_line, start_col)
