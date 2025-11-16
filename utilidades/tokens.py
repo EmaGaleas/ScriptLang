@@ -1,11 +1,10 @@
-# tokens.py
 """
 Definición de los tokens reconocidos por el lenguaje ScriptLang.
 Este módulo lista las palabras clave, símbolos y tipos de token
 que el analizador léxico (Lexer) identificará en los scripts .sl
 """
 
-# --- Palabras clave del lenguaje ---
+# Palabras clave del lenguaje
 KEYWORDS = {
     "set": "SET",
     "copy": "COPY",
@@ -20,7 +19,7 @@ KEYWORDS = {
     "to": "TO"
 }
 
-# --- Símbolos y operadores ---
+# Símbolos y operadores
 SYMBOLS = {
     "=": "EQUAL",
     "{": "LBRACE",
@@ -28,7 +27,7 @@ SYMBOLS = {
     "$": "DOLLAR"
 }
 
-# --- Tipos de token generales ---
+# Tipos de token generales 
 TOKEN_TYPES = {
     "VAR": "VAR",    # Nombres de variables (IDENT) (Se puede cambiar)
     "STRING": "STRING",  # Cadenas entre comillas ("texto") 

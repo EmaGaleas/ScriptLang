@@ -1,6 +1,6 @@
 
 from utilidades.tokens import TOKEN_TYPES
-from utilidades.errores import ErrorHelper
+from utilidades.errores import AuxError
 from core.ast_nodes import (
     ProgramNode, AssignmentNode, CopyCommandNode, MoveCommandNode,
     DeleteCommandNode, MakeDirCommandNode, RunCommandNode, LogCommandNode,
@@ -12,7 +12,7 @@ class Parser:
         self.tokens = tokens
         self.pos = 0
 
-    # === Utils ===
+    # UTILIDADES
     def _peek(self, offset=0):
         return self.tokens[self.pos + offset] if self.pos + offset < len(self.tokens) else None
 
@@ -28,7 +28,7 @@ class Parser:
     def _expect(self, ttype):
         tok = self._current()
         if tok is None or tok.type != ttype:
-            ErrorHelper.expected(tok, [ttype])
+            AuxError.expected(tok, [ttype])
         return self._advance()
 
     def _accept(self, ttype):
@@ -37,7 +37,7 @@ class Parser:
             return self._advance()
         return None
 
-    # === Parser general ===
+    # PARSER GENERAL
     def parse(self):
         stmts = []
         while True:
@@ -47,17 +47,17 @@ class Parser:
             stmts.append(self._parse_statement())
         return ProgramNode(stmts)
 
-    # === Statements ===
+    # STATEMENTS
     def _parse_statement(self):
         cur = self._current()
         if cur is None:
-            ErrorHelper.unexpected_eof(["declaración válida"])
+            AuxError.unexpected_eof(["declaración válida"])
 
         if cur.type == TOKEN_TYPES["VAR"]:
             next_tok = self._peek(1)
             if next_tok and next_tok.type == "EQUAL":
                 return self._parse_assignment()
-            ErrorHelper.expected(cur, ["="])
+            AuxError.expected(cur, ["="])
 
         if cur.type == "SET":
             return self._parse_assignment_set()
@@ -68,9 +68,9 @@ class Parser:
         if cur.type == "IF":
             return self._parse_if()
 
-        ErrorHelper.unexpected(cur)
+        AuxError.unexpected(cur)
 
-    # === Assignments ===
+    # ASIGNACIONES
     def _parse_assignment_set(self):
         self._expect("SET")
         var_tok = self._expect(TOKEN_TYPES["VAR"])
@@ -82,7 +82,7 @@ class Parser:
         self._expect("EQUAL")
         return AssignmentNode(var_tok.value, self._parse_expression())
 
-    # === Commands ===
+    # COMANDOS
     def _parse_command(self):
         cur = self._advance()
 
@@ -104,14 +104,14 @@ class Parser:
         if cur.type == "LOG":
             return LogCommandNode(self._parse_expression())
 
-        ErrorHelper.unexpected(cur)
+        AuxError.unexpected(cur)
 
-    # === If / Blocks ===
+    # IF / BLOQUES
     def _parse_if(self):
         self._expect("IF")
         cond = self._current()
         if cond is None or cond.type != "EXISTS":
-            ErrorHelper.expected(cond, ["EXISTS"])
+            AuxError.expected(cond, ["EXISTS"])
         self._advance()
 
         expr = self._parse_expression()
@@ -132,18 +132,18 @@ class Parser:
         while True:
             cur = self._current()
             if cur is None:
-                ErrorHelper.unexpected_eof(["}"])
+                AuxError.unexpected_eof(["}"])
             if cur.type == "RBRACE":
                 self._advance()
                 break
             stmts.append(self._parse_statement())
         return stmts
 
-    # === Expressions ===
+    # EXPRESIONES
     def _parse_expression(self):
         cur = self._current()
         if cur is None:
-            ErrorHelper.unexpected_eof(["expresión"])
+            AuxError.unexpected_eof(["expresión"])
 
         if cur.type == TOKEN_TYPES["STRING"]:
             return StringLiteralNode(self._advance().value)
@@ -151,8 +151,7 @@ class Parser:
         if cur.type == TOKEN_TYPES["VAR"]:
             return VariableRefNode(self._advance().value)
 
-        ErrorHelper.expected(cur, ["STRING", "VAR"])
-
+        AuxError.expected(cur, ["STRING", "VAR"])
 
 def parse_tokens(tokens):
     return Parser(tokens).parse()

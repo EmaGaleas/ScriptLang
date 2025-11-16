@@ -1,5 +1,5 @@
 from utilidades.tokens import KEYWORDS, SYMBOLS, TOKEN_TYPES
-from utilidades.errores import ErrorHelper
+from utilidades.errores import AuxError
 class Token:
     __slots__ = ("type", "value", "line", "column")
 
@@ -14,7 +14,7 @@ class Lexer:
         self.src, self.pos, self.line, self.col = src, 0, 1, 1
         self.len = len(src)
 
-    # === PUBLIC ===
+    # PUBLICO
     def tokenize(self):
         tokens = []
         add = tokens.append  # microoptimizacion
@@ -39,7 +39,7 @@ class Lexer:
         add(Token(TOKEN_TYPES["END"], None, self.line, self.col))
         return tokens
 
-    # === TOKENS ===
+    # TOKENS
     def _string(self):
         start_line, start_col = self.line, self.col
         self._advance()  # abre comillas
@@ -60,7 +60,7 @@ class Lexer:
                 val.append(self._advance())
 
         if self._eof():
-            ErrorHelper.illegal_char(c, self.line, self.col)
+            AuxError.illegal_char(c, self.line, self.col)
 
         self._advance()  # cierra comillas
         return Token(TOKEN_TYPES["STRING"], ''.join(val), start_line, start_col)
@@ -75,7 +75,7 @@ class Lexer:
         c = self._advance()
         return Token(SYMBOLS[c], c, start_line, start_col)
 
-    # === UTILIDADES ===
+    # UTILIDADES
     def _consume(self, cond):
         start = self.pos
         while not self._eof() and cond(self._peek()):

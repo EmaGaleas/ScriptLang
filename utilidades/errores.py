@@ -1,19 +1,13 @@
 # errores.py
 
-class ErrorHelper:
-    """
-    Módulo central para manejar errores léxicos y sintácticos con mensajes
-    consistentes, amigables y reutilizables por lexer y parser.
-    """
+class AuxError:
 
-    # ==================================================
-    #                ERRORES DE SINTAXIS
-    # ==================================================
+    # ERRORES DE SINTAXIS
     @staticmethod
     def expected(token, esperado):
         """Error cuando se esperaba uno o varios tokens específicos."""
         if token is None:
-            return ErrorHelper.unexpected_eof(esperado)
+            return AuxError.unexpected_eof(esperado)
 
         linea = token.line
         col = token.column
@@ -29,7 +23,7 @@ class ErrorHelper:
     def unexpected(token):
         """Error para token inesperado en parser."""
         if token is None:
-            return ErrorHelper.unexpected_eof(["token válido"])
+            return AuxError.unexpected_eof(["token válido"])
 
         linea = token.line
         col = token.column
@@ -48,9 +42,7 @@ class ErrorHelper:
             f"Se esperaba: {esperado_fmt}."
         )
 
-    # ==================================================
-    #                ERRORES LÉXICOS
-    # ==================================================
+    # ERRORES LÉXICOS
     @staticmethod
     def illegal_char(char, line, column):
         """Caracter no reconocido por el lenguaje."""
