@@ -44,25 +44,25 @@ class AuxError:
 
     # ERRORES LÉXICOS
     @staticmethod
-    def illegal_char(char, line, column):
+    def illegal_char(char, linea, col):
         """Caracter no reconocido por el lenguaje."""
         raise SyntaxError(
-            f"[Error Léxico] Línea {line}, Columna {column}: "
+            f"[Error Léxico] Línea {linea}, Columna {col}: "
             f"Carácter ilegal '{char}'."
         )
 
     @staticmethod
-    def unterminated_string(line, column):
+    def unterminated_string(linea, col):
         """Cadena sin cerrar."""
         raise SyntaxError(
-            f"[Error Léxico] Línea {line}, Columna {column}: "
+            f"[Error Léxico] Línea {linea}, Columna {col}: "
             f"Cadena string sin cerrar."
         )
 
     @staticmethod
-    def invalid_escape(char, line, column):
+    def invalid_escape(char, linea, col):
         """Escape inválido dentro de string."""
         raise SyntaxError(
-            f"[Error Léxico] Línea {line}, Columna {column}: "
+            f"[Error Léxico] Línea {linea}, Columna {col}: "
             f"Secuencia de escape inválida '\\{char}'."
         )
