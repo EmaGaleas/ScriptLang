@@ -2,3 +2,11 @@ pruebas/__pycache__/test_lexer.cpython-313.pyc
 utilidades/__pycache__/tokens.cpython-313.pyc
 core/__pycache__/lexer.cpython-313.pyc
 core/__pycache__/parser.cpython-313.pyc
+biblioteca/__pycache__/__init__.cpython-313.pyc
+biblioteca/__pycache__/filesystem.cpython-313.pyc
+biblioteca/__pycache__/logger.cpython-313.pyc
+biblioteca/__pycache__/system.cpython-313.pyc
+core/__pycache__/ast_nodes.cpython-313.pyc
+core/__pycache__/interpreter.cpython-313.pyc
+utilidades/__pycache__/errores.cpython-313.pyc
+pruebas/__pycache__/test_interpreter.cpython-313.pyc

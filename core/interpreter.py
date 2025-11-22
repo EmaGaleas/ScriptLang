@@ -1,6 +1,8 @@
+# core/interpreter.py
 from __future__ import annotations
-
 from typing import Dict, List
+from biblioteca import filesystem, system, logger as std_logger
+
 from core.ast_nodes import (
     ProgramNode, AssignmentNode, CopyCommandNode, StatementNode, MoveCommandNode, ExpressionNode,
     DeleteCommandNode, MakeDirCommandNode, RunCommandNode, LogCommandNode,
@@ -118,46 +120,104 @@ class Interpreter:
 
     def _check_exists(self, path: str) -> bool:
         """
-        Verifica la condición EXISTS(path).
-        Aquí SOLO definimos la estructura. Más adelante esto se puede delegar
-        a biblioteca.filesystem.exists(path) o similar.
+        Verifica la condición EXISTS(path) delegando a biblioteca.filesystem.exists.
+        Devolver False y loggear si hay error.
         """
-        # TODO: integrar con biblioteca.filesystem
-        print(f"[CHECK EXISTS] {path}")
-        return False  # Por ahora, siempre 'no existe'
+        # Bloquear rutas vacías por seguridad
+        if not path or not path.strip():
+            std_logger.log_warning("EXISTS recibido con ruta vacía.")
+            return False
+        try:
+            return filesystem.exists(path)
+        except Exception as e:
+            std_logger.log_error(f"Error en EXISTS('{path}'): {e}", exc_info=True)
+            return False
 
-    # === Handlers de comandos (estructura base) ===
+    # === Handlers de comandos (implementados con biblioteca) ===
 
     def _cmd_copy(self, src: str, dst: str) -> None:
-        # TODO: conectar con biblioteca.filesystem.copy(src, dst)
-        print(f"[COPY] {src} -> {dst}")
+        # validaciones básicas
+        if not src or not src.strip():
+            raise InterpreterError("Ruta de origen vacía no permitida.")
+        if not dst or not dst.strip():
+            raise InterpreterError("Ruta destino vacía no permitida.")
+
+        try:
+            filesystem.copy(src, dst)
+            std_logger.log_info(f"COPY: {src} -> {dst}")
+        except Exception as e:
+            std_logger.log_error(f"Error copy {src} -> {dst}: {e}", exc_info=True)
+            raise InterpreterError(f"Error al copiar: {e}")
 
     def _cmd_move(self, src: str, dst: str) -> None:
-        # TODO: conectar con biblioteca.filesystem.move(src, dst)
-        print(f"[MOVE] {src} -> {dst}")
+        if not src or not src.strip():
+            raise InterpreterError("Ruta de origen vacía no permitida.")
+        if not dst or not dst.strip():
+            raise InterpreterError("Ruta destino vacía no permitida.")
+
+        try:
+            filesystem.move(src, dst)
+            std_logger.log_info(f"MOVE: {src} -> {dst}")
+        except Exception as e:
+            std_logger.log_error(f"Error move {src} -> {dst}: {e}", exc_info=True)
+            raise InterpreterError(f"Error al mover: {e}")
 
     def _cmd_delete(self, target: str) -> None:
-        # TODO: conectar con biblioteca.filesystem.delete(target)
-        print(f"[DELETE] {target}")
+        if not target or not target.strip():
+            raise InterpreterError("Ruta vacía no permitida para delete.")
+
+        try:
+            filesystem.delete(target)
+            std_logger.log_info(f"DELETE: {target}")
+        except Exception as e:
+            std_logger.log_error(f"Error delete {target}: {e}", exc_info=True)
+            raise InterpreterError(f"Error al borrar: {e}")
 
     def _cmd_makedir(self, path: str) -> None:
-        # TODO: conectar con biblioteca.filesystem.makedir(path)
-        print(f"[MAKEDIR] {path}")
+        if not path or not path.strip():
+            raise InterpreterError("Ruta vacía no permitida para makedir.")
+        try:
+            filesystem.makedir(path)
+            std_logger.log_info(f"MAKEDIR: {path}")
+        except Exception as e:
+            std_logger.log_error(f"Error makedir {path}: {e}", exc_info=True)
+            raise InterpreterError(f"Error al crear directorio: {e}")
 
     def _cmd_run(self, program: str) -> None:
-        # TODO: conectar con biblioteca.system.run(program)
-        print(f"[RUN] {program}")
+        if not program or not program.strip():
+            raise InterpreterError("Comando vacío no permitido.")
+
+        try:
+            # Por seguridad: shell=False por defecto. Si quieres permitir shell features, cambia shell=True.
+            rc, out, err = system.run(program, capture_output=True, shell=False)
+            std_logger.log_info(f"RUN: {program} rc={rc}")
+            if out:
+                std_logger.log_info(f"RUN stdout: {out.strip()}")
+            if err:
+                std_logger.log_error(f"RUN stderr: {err.strip()}")
+
+            if rc != 0:
+                raise InterpreterError(f"Comando '{program}' finalizó con código {rc}")
+        except InterpreterError:
+            raise
+        except Exception as e:
+            std_logger.log_error(f"Error run {program}: {e}", exc_info=True)
+            raise InterpreterError(f"Error al ejecutar comando: {e}")
 
     def _cmd_log(self, message: str) -> None:
-        # TODO: conectar con biblioteca.logger.log(message)
-        print(f"[LOG] {message}")
-
+        try:
+            std_logger.log_info(message)
+        except Exception as e:
+            # No detener ejecución por fallo de logging; imprimir en consola como fallback
+            print(f"[LOG ERROR] {e}")
 
 def execute(program: ProgramNode) -> Interpreter:
     """
-    Helper opcional: ejecuta un programa y devuelve el intérprete
-    (para inspeccionar las variables, etc.).
+    Helper: ejecuta un programa y devuelve el intérprete.
+    Inicializa el logger por defecto (scriptlang.log).
     """
+    # Inicializa logger por defecto (archivo scriptlang.log en cwd)
+    std_logger.init_logger("scriptlang.log", level="INFO")
     interp = Interpreter()
     interp.run(program)
     return interp

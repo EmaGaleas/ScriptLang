@@ -52,18 +52,15 @@ class Lexer:
             if c == '\\' and self._peek(1) == '"':
                 val.append('"')
                 self._advance(2)
-            elif c == '$':
-                self._advance()
-                var = self._consume(lambda ch: ch.isalnum() or ch == '_')
-                val.append(f"${{{var}}}")
             else:
-                val.append(self._advance())
+                val.append(self._advance())  # todo tal cual, no tocar $
 
         if self._eof():
             AuxError.illegal_char(c, self.line, self.col)
 
         self._advance()  # cierra comillas
         return Token(TOKEN_TYPES["STRING"], ''.join(val), start_line, start_col)
+
 
     def _identifier(self):
         start_line, start_col = self.line, self.col
