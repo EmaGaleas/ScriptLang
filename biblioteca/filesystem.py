@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 from typing import List
 
-# ROOT puede ajustarse a la raíz del proyecto si quieres:
+# ROOT puede ajustarse a la raíz del proyecto
 ROOT = Path.cwd()
 
 def _resolve(path: str, allow_outside_root: bool = False) -> Path:
