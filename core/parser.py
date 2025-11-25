@@ -75,12 +75,16 @@ class Parser:
         self._expect("SET")
         var_tok = self._expect(TOKEN_TYPES["VAR"])
         self._expect("EQUAL")
-        return AssignmentNode(var_tok.value, self._parse_expression())
+        node = AssignmentNode(var_tok.value, self._parse_expression())
+        node.set_pos(var_tok)
+        return node
 
     def _parse_assignment(self):
         var_tok = self._expect(TOKEN_TYPES["VAR"])
         self._expect("EQUAL")
-        return AssignmentNode(var_tok.value, self._parse_expression())
+        node = AssignmentNode(var_tok.value, self._parse_expression())
+        node.set_pos(var_tok)
+        return node
 
     # COMANDOS
     def _parse_command(self):
@@ -90,25 +94,35 @@ class Parser:
             src = self._parse_expression()
             self._expect("TO")
             dst = self._parse_expression()
-            return CopyCommandNode(src, dst) if cur.type == "COPY" else MoveCommandNode(src, dst)
+            node = CopyCommandNode(src, dst) if cur.type == "COPY" else MoveCommandNode(src, dst)
+            node.set_pos(cur)
+            return node
 
         if cur.type == "DELETE":
-            return DeleteCommandNode(self._parse_expression())
+            node = DeleteCommandNode(self._parse_expression())
+            node.set_pos(cur)
+            return node
 
         if cur.type == "MAKEDIR":
-            return MakeDirCommandNode(self._parse_expression())
+            node = MakeDirCommandNode(self._parse_expression())
+            node.set_pos(cur)
+            return node
 
         if cur.type == "RUN":
-            return RunCommandNode(self._parse_expression())
+            node = RunCommandNode(self._parse_expression())
+            node.set_pos(cur)
+            return node
 
         if cur.type == "LOG":
-            return LogCommandNode(self._parse_expression())
+            node = LogCommandNode(self._parse_expression())
+            node.set_pos(cur)
+            return node
 
         AuxError.unexpected(cur)
 
     # IF / BLOQUES
     def _parse_if(self):
-        self._expect("IF")
+        if_tok = self._expect("IF")
         cond = self._current()
         if cond is None or cond.type != "EXISTS":
             AuxError.expected(cond, ["EXISTS"])
@@ -125,7 +139,9 @@ class Parser:
             self._expect("LBRACE")
             else_body = self._parse_block()
 
-        return IfStatementNode(condition, if_body, else_body)
+        node = IfStatementNode(condition, if_body, else_body)
+        node.set_pos(if_tok)
+        return node
 
     def _parse_block(self):
         stmts = []
@@ -146,10 +162,16 @@ class Parser:
             AuxError.unexpected_eof(["expresión"])
 
         if cur.type == TOKEN_TYPES["STRING"]:
-            return StringLiteralNode(self._advance().value)
+            tok = self._advance()
+            node = StringLiteralNode(tok.value)
+            node.set_pos(tok)
+            return node
 
         if cur.type == TOKEN_TYPES["VAR"]:
-            return VariableRefNode(self._advance().value)
+            tok = self._advance()
+            node = VariableRefNode(tok.value)
+            node.set_pos(tok)
+            return node
 
         AuxError.expected(cur, ["STRING", "VAR"])
 

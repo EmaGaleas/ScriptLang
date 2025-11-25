@@ -8,6 +8,7 @@ from core.ast_nodes import (
     DeleteCommandNode, MakeDirCommandNode, RunCommandNode, LogCommandNode,
     IfStatementNode, ExistsConditionNode, StringLiteralNode, VariableRefNode,
 )
+from core import semantic
 
 class InterpreterError(Exception):
     pass
@@ -216,6 +217,9 @@ def execute(program: ProgramNode) -> Interpreter:
     Helper: ejecuta un programa y devuelve el intérprete.
     Inicializa el logger por defecto (scriptlang.log).
     """
+    # Primero: comprobar semántica y bloquear ejecución si hay errores.
+    semantic.check(program)
+
     # Inicializa logger por defecto (archivo scriptlang.log en cwd)
     std_logger.init_logger("scriptlang.log", level="INFO")
     interp = Interpreter()
