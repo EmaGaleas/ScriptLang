@@ -56,7 +56,7 @@ def test_run_empty_literal_raises():
 
 def test_delete_variable_nonexistent_raises():
     # variable asignada a una literal inexistente debe causar error semántico en delete
-    fname = 'no_such_file_99999.tmp'
+    fname = 'no_existe_archivo.tmp'
     src = f'set x = "{fname}"\ndelete x\n'
     with pytest.raises(SemanticError):
         parse_and_check(src)
@@ -68,7 +68,7 @@ def test_copy_destination_parent_missing_raises(tmp_path: Path):
     src_file.write_text('hiiii')
 
     # destino con carpeta padre inexistente
-    dest = 'nonexistent_parent_dir/sub/dest.txt'
+    dest = 'no_existe/sub/dest.txt'
     src = f'copy "{src_file}" to "{dest}"\n'
     with pytest.raises(SemanticError):
         parse_and_check(src)

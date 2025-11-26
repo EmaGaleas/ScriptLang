@@ -1,2 +1,2 @@
-set nombre = "Ema"
+set nombre = "Nic"
 log "Hola ${nombre}"
