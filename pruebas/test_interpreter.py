@@ -86,4 +86,4 @@ run_script(script6)
 script7 = 'set = "x"\n'
 run_script(script7)
 
-print("\n=== Pruebas completadas. Revisa manual_test_all.log para detalles de logs ===")
+print("\n=== Pruebas completadas. Revisa el archivo .log para detalles de logs ===")

@@ -1,0 +1,15 @@
+2025-11-25 14:26:55 [INFO] Hola Ema
+2025-11-25 14:26:55 [INFO] MAKEDIR: carpeta_prueba
+2025-11-25 14:26:55 [INFO] Directorio creado
+2025-11-25 14:26:55 [INFO] DELETE: carpeta_prueba
+2025-11-25 14:26:55 [INFO] Directorio borrado
+2025-11-25 14:26:55 [INFO] COPY: archivo_test.txt -> copia.txt
+2025-11-25 14:26:55 [INFO] Archivo copiado
+2025-11-25 14:26:55 [INFO] MOVE: copia.txt -> copia2.txt
+2025-11-25 14:26:55 [INFO] Archivo movido
+2025-11-25 14:26:55 [INFO] DELETE: archivo_test.txt
+2025-11-25 14:26:55 [INFO] DELETE: copia2.txt
+2025-11-25 14:26:55 [INFO] Archivos borrados
+2025-11-25 14:26:55 [INFO] Archivo existe
+2025-11-25 14:26:55 [INFO] DELETE: archivo_if.txt
+2025-11-25 14:26:55 [INFO] Variable no definida: 

@@ -1,6 +1,6 @@
 # Ejemplo de ScriptLang
 
-set name = "Ema"
+set name = "Juana"
 copy "ejemplo1.txt" to "Lenguajes/ejemplos/ejemplo1"
 
 if exists "Lenguajes/ejemplos/ejemplo1" {

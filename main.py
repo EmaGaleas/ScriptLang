@@ -1,45 +1,68 @@
-
+#!/usr/bin/env python3
 import sys
+import os
+
 from core.lexer import Lexer
 from core.parser import parse_tokens
-from core.interpreter import execute, InterpreterError
 from core.semantic import SemanticError
+from core.interpreter import execute, InterpreterError
 
 
 def run_script_text(src: str) -> int:
-	try:
-		tokens = Lexer(src).tokenize()
-		ast = parse_tokens(tokens)
-		# semantic.check se llama dentro de execute (punto de integración)
-		execute(ast)
-		return 0
-	except SyntaxError as e:
-		print(f"[Sintaxis] {e}", file=sys.stderr)
-		return 2
-	except SemanticError as e:
-		print(f"[Semántico] {e}", file=sys.stderr)
-		return 3
-	except InterpreterError as e:
-		print(f"[Ejecución] {e}", file=sys.stderr)
-		return 4
-	except Exception as e:
-		print(f"[Error inesperado] {e}", file=sys.stderr)
-		return 5
+    """Ejecuta código ScriptLang proveniente de un string completo."""
+    try:
+        # 1. Lexing
+        tokens = Lexer(src).tokenize()
+
+        # 2. Parsing
+        ast = parse_tokens(tokens)
+
+        # 3 y 4. Análisis semántico + ejecución
+        execute(ast)
+
+        return 0  # Ejecución correcta
+
+    except SyntaxError as e:
+        print(f"[Error de Sintaxis] {e}", file=sys.stderr)
+        return 2
+    except SemanticError as e:
+        print(f"[Error Semántico] {e}", file=sys.stderr)
+        return 3
+    except InterpreterError as e:
+        print(f"[Error en Ejecución] {e}", file=sys.stderr)
+        return 4
+    except Exception as e:
+        print(f"[Error inesperado] {e}", file=sys.stderr)
+        return 5
 
 
 def main(argv=None):
-	argv = argv or sys.argv[1:]
-	if len(argv) >= 1:
-		path = argv[0]
-		with open(path, 'r', encoding='utf-8') as f:
-			src = f.read()
-	else:
-		print('Leyendo script desde stdin. Termina con EOF (Ctrl+D / Ctrl+Z).')
-		src = sys.stdin.read()
+    """Punto de entrada de la herramienta ScriptLang."""
+    argv = argv or sys.argv[1:]
 
-	return run_script_text(src)
+    if len(argv) == 0 or argv[0] in ("-h", "--help"):
+        print("Uso:")
+        print("   python main.py archivo.sl")
+        print()
+        print("Si no se especifica archivo, el script se leerá desde stdin.")
+        return 1
+
+    # --- Si se especifica archivo ---
+    path = argv[0]
+
+    if not os.path.exists(path):
+        print(f"[Archivo no encontrado] {path}", file=sys.stderr)
+        return 6
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            src = f.read()
+    except Exception as e:
+        print(f"[Error al leer archivo] {e}", file=sys.stderr)
+        return 7
+
+    return run_script_text(src)
 
 
-if __name__ == '__main__':
-	sys.exit(main())
-
+if __name__ == "__main__":
+    sys.exit(main())
