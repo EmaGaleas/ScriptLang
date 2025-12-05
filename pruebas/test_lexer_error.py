@@ -1,24 +1,40 @@
 from core.lexer import Lexer
 
-def main():
-    ruta = "ejemplos/errores.sl"   # <-- Cambia el archivo aquí
+print("\n========== PRUEBA LEXER ERROR 1 (string sin cerrar) ==========\n")
 
-    with open(ruta, "r", encoding="utf-8") as f:
-        codigo = f.read()
+codigo = """
+set x = "Hola
+"""
 
-    print("=== Código ===\n")
-    print(codigo)
-    print("\n=== TOKENS ===")
+print("=== Código ===")
+print(codigo)
 
-    try:
-        lexer = Lexer(codigo)
-        tokens = lexer.tokenize()
-        for t in tokens:
-            print(t)
+lexer = Lexer(codigo)
 
-    except SyntaxError as e:
-        print("\n--- ERROR EN LÉXICO ---")
-        print(e)
+try:
+    tokens = lexer.tokenize()
+    print("ERROR: El lexer NO detectó el string sin cerrar")
+except SyntaxError as e:
+    print("Error léxico detectado correctamente:")
+    print(e)
 
-if __name__ == "__main__":
-    main()
+
+
+print("\n========== PRUEBA LEXER ERROR 2 (caracter ilegal) ==========\n")
+
+codigo2 = """
+set x = "hola"
+$%^&  # caracteres inválidos
+"""
+
+print("=== Código ===")
+print(codigo2)
+
+lexer = Lexer(codigo2)
+
+try:
+    tokens = lexer.tokenize()
+    print("ERROR: El lexer NO detectó los caracteres ilegales")
+except SyntaxError as e:
+    print("Error léxico detectado correctamente:")
+    print(e)

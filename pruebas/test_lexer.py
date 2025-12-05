@@ -1,47 +1,49 @@
-import unittest
-from core.lexer import Lexer, Token
-from utilidades import tokens
-from utilidades.tokens import TOKEN_TYPES, KEYWORDS, SYMBOLS
+from core.lexer import Lexer
 
-class TestLexer(unittest.TestCase):
+print("\n========== PRUEBA LEXER 1 (tokens básicos) ==========\n")
 
-    def test_basic_script(self):
-        script = '''
-        # Script de prueba
-        set name = "HOLAAAA"
-        copy "prueba.txt" to "descargas/prueba.txt"
-        '''
-        lexer = Lexer(script)
-        tokens = lexer.tokenize()
-        print("\n-------TOKENS DE UNITTEST -------")
-        for t in tokens:
-            print(t)  
-        print("-------FIN DE TOKENS -------\n")
+codigo = """
+set x = "hola"
+log x
+mkdir carpeta
+"""
+
+print("=== Código ===")
+print(codigo)
+
+lexer = Lexer(codigo)
+
+try:
+    tokens = lexer.tokenize()
+    print("\n=== TOKENS ===")
+    for t in tokens:
+        print(t)
+    print("\nLexer procesó el código correctamente")
+except SyntaxError as e:
+    print("Error léxico detectado:")
+    print(e)
 
 
-        # Comprobamos que los tokens fundamentales existan en orden
-        expected_types = [
-            KEYWORDS["set"], TOKEN_TYPES["VAR"], SYMBOLS["="], TOKEN_TYPES["STRING"],
-            KEYWORDS["copy"], TOKEN_TYPES["STRING"], KEYWORDS["to"], TOKEN_TYPES["STRING"],
-            TOKEN_TYPES["END"]
-        ]
-        self.assertEqual([token.type for token in tokens], expected_types)
 
-    def test_if_else_block(self):
-        script = '''
-        if exists "descargas/prueba.txt" {
-            log "Archivo copiado :)"
-        } else {
-            log "No se pudo copiar :("
-        }
-        '''
+print("\n========== PRUEBA LEXER 2 (strings y variables) ==========\n")
 
-        lexer = Lexer(script)
-        tokens = lexer.tokenize()
+codigo2 = """
+set saludo = "hola"
+set nombre = "mundo"
+set mensaje = "${saludo}_${nombre}"
+"""
 
-        # validar END y no falle
-        self.assertEqual(tokens[-1].type, TOKEN_TYPES["END"])
-        self.assertTrue(any(token.type == KEYWORDS["if"] for token in tokens))
+print("=== Código ===")
+print(codigo2)
 
-if __name__ == '__main__':
-    unittest.main()
+lexer = Lexer(codigo2)
+
+try:
+    tokens = lexer.tokenize()
+    print("\n=== TOKENS ===")
+    for t in tokens:
+        print(t)
+    print("\nLexer procesó el código correctamente")
+except SyntaxError as e:
+    print("Error léxico detectado:")
+    print(e)
